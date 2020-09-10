@@ -1,4 +1,5 @@
-import pickle
+import math
+from typing import Tuple, Sequence, Optional
 from pathlib import Path
 
 import numpy as np
@@ -6,13 +7,15 @@ import torch
 from PIL import Image
 
 
-def train_test_split(data, train_size, stratify=None):
+def train_test_split(data: Sequence, train_size: float,
+                     stratify: Optional[Sequence] = None) -> Tuple[Sequence, Sequence]:
     """
     Split data on two folds
-    :param data: (iterable) data for split
+    :param data: (Sequence) data for split
     :param train_size: (float) should be (0, 1)
-    :param stratify: (labels) stratify folds
-    :return: (tuple(np.array)) train, test
+    :param stratify: (Union[Sequence, None]) stratify folds
+    :return: (Tuple[Sequence, Sequence]) train, test.
+            Tuple[numpy.array, numpy.array] if stratify used,
     """
     if stratify is None:
         indices = np.arange(len(data))
@@ -25,7 +28,7 @@ def train_test_split(data, train_size, stratify=None):
         train_data = []
         test_data = []
         for u_value in unique_values:
-            u_train, u_test = train_test_split(data[stratify == u_value], train_size)
+            u_train, u_test = train_test_split(data[stratify == u_value], train_size, None)
             train_data.append(u_train)
             test_data.append(u_test)
         np.random.shuffle(train_data)
@@ -34,13 +37,18 @@ def train_test_split(data, train_size, stratify=None):
 
 
 class MyDataLoader:
-    def __init__(self, data, batch_size, indices=None, shuffle=False):
+    def __init__(self, data: Sequence,
+                 batch_size: int,
+                 indices: Optional[Sequence] = None,
+                 shuffle: bool = False,
+                 transformer=None):
         """
         Create batches
-        :param data: (iterable)
+        :param data: (Sequence)
         :param batch_size: (int)
-        :param indices: (list or np.array) Default None
-        :param shuffle: (bool) Default None
+        :param indices: (list or np.array) Default: None
+        :param shuffle: (bool) Default: None
+        :param transformer: (torchvision.transforms or other) transformer for augmentations. Default: None
         """
         self.shuffle = shuffle
         self.batch_size = batch_size
@@ -51,9 +59,8 @@ class MyDataLoader:
         else:
             self.data_len = len(indices)
             self.indices = np.array(indices)
-        self.len_ = int(np.ceil(self.data_len / batch_size))
 
-        self.X_shape = tuple(self.data[0][0].shape)
+        self.len_ = math.ceil(self.data_len / batch_size)
 
     def __len__(self):
         return self.len_
@@ -88,18 +95,6 @@ class MyDataLoader:
             batch_indices = self.indices[start_index: end_index]
             X_batch, y_batch = self.create_batch(batch_indices)
             yield X_batch, y_batch
-
-
-def load_class_name(path):
-    """
-    load class names from file
-    :param path: (str) file path
-    :return: (list) labels
-    """
-    file = open(path, 'rb')
-    out = pickle.load(file)
-    file.close()
-    return out
 
 
 class Dataset:
