@@ -3,7 +3,7 @@ from collections import namedtuple
 from typing import Union, Tuple
 
 import torch.nn as nn
-from torch import Tensor
+from torch import Tensor, save, load
 
 
 class BaseLayer(nn.Module):
@@ -152,3 +152,13 @@ class AFModel(nn.Sequential):
                 self.add_module(layer_name, nn.Dropout(*param))
         self.add_module('Flatten', nn.Flatten())
         self.weight_initialization()
+
+    def save_model(self, file_name: str = 'model.pkl'):
+        save({'state_dict': self.state_dict(),
+              'architecture': self.architecture
+              }, file_name)
+
+    def load_model(self, file_name: str = 'model.pkl'):
+        file = load(file_name)
+        self.create_model(file['architecture'])
+        self.load_state_dict(file['state_dict'])
