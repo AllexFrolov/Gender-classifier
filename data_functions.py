@@ -4,6 +4,7 @@ from pathlib import Path
 
 import numpy as np
 import torch
+from torchvision import transforms
 from PIL import Image
 
 
@@ -62,28 +63,26 @@ class MyDataLoader:
 
         self.len_ = math.ceil(self.data_len / batch_size)
 
-    def __len__(self):
+        if transformer is None:
+            self.transformer = transforms.ToTensor()
+        else:
+            self.transformer = transformer
+
+    def __len__(self) -> int:
         return self.len_
 
-    def idx_to_class(self, indices):
-        """
-        convert indexes to label
-        :param indices: (iterable) 1D array
-        :return: (list) label
-        """
-        classes = []
-        for index in indices:
-            classes.append(self.data.classes[index])
-        return classes
-
-    def create_batch(self, indices):
-        batch_size = len(indices)
-        X_batch = torch.zeros((batch_size, *self.X_shape))
-        y_batch = torch.zeros(batch_size)
-        for n_batch, index in enumerate(indices):
-            X, y = self.data[index]
-            X_batch[n_batch] = X
-            y_batch[n_batch] = y
+    def create_batch(self, indices: Sequence) -> Tuple[torch.Tensor, list]:
+        X_batch = []
+        y_batch = []
+        for batch_index in indices:
+            X, y = self.data[batch_index]
+            X = self.transformer(X)
+            X_batch.append(X)
+            y_batch.append(y)
+        if len(X_batch) > 1:
+            X_batch = torch.stack(X_batch)
+        else:
+            X_batch = torch.unsqueeze(X_batch[0], 0)
         return X_batch, y_batch
 
     def __iter__(self):
