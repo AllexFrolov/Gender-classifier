@@ -1,5 +1,5 @@
 import math
-from typing import Union, Tuple
+from typing import Union, Tuple, Optional
 
 import torch.nn as nn
 from torch import Tensor, save, load
@@ -74,8 +74,14 @@ class Convolution(BaseLayer):
 
 
 class AFModel(nn.Module):
-    def __init__(self):
+    def __init__(self, labels: Optional[list] = None):
         super().__init__()
+        self.labels = labels
+        self.sequential = None
+        self.architecture = None
+
+    def save_labels(self, labels: Optional[list]):
+        self.labels = labels
 
     @staticmethod
     def get_def_arch(in_channels: int, out_channels: int) -> Tuple[list, ...]:
@@ -91,7 +97,7 @@ class AFModel(nn.Module):
             raise ValueError('out_channels should be type int and >= 1')
 
         return (['Conv', in_channels, 8, 3, True, False, 'RE', 2],  # 224
-                ['Conv',8, 16, 3, True, True, 'RE', 2],  # 112
+                ['Conv', 8, 16, 3, True, True, 'RE', 2],  # 112
                 ['Conv', 16, 32, 3, True, True, 'HS', 2],  # 56
                 ['Conv', 32, 32, 3, True, False, 'RE', 1],  # 28
                 ['Conv', 32, 64, 3, True, False, 'RE', 2],  # 28
@@ -127,6 +133,15 @@ class AFModel(nn.Module):
                                        'sq_exc', 'nonlinear', 'stride']
                 Pooling - ['AdAvPool', 'out_size']
                 Dropout - ['Dropout', 'p']
+            example:
+                [['Conv', in_channels, 8, 3, True, False, 'RE', 2],
+                ['Conv', 8, 16, 3, True, True, 'RE', 2],
+                ['Conv', 16, 32, 3, True, True, 'HS', 2],
+                ['Conv', 32, 32, 3, True, True, 'HS', 2]
+                ['AdAvPool', 1],
+                ['Conv', 32, 128, 1, False, False, 'HS', 1],
+                ['Dropout', 0.8],
+                ['Conv', 128, out_channels, 1, False, False, None, 1]]
             if None used default architecture
         :param in_channels: (int or None) input channels in model. ignored if architecture not is None
         :param classes_count: (int or None) classes_count. ignored if architecture not is None
@@ -149,14 +164,20 @@ class AFModel(nn.Module):
         self.weight_initialization()
 
     def save_model(self, file_name: str = 'model.pkl'):
+        """
+        save weights values and architecture in a binary file
+        :param file_name: full name of a file. Default: "model.pkl"
+        """
         save({'architecture': self.architecture,
               'state_dict': self.sequential.state_dict(),
+              'labels': self.labels
               }, file_name)
 
     def load_model(self, file_name: str = 'model.pkl'):
         file = load(file_name)
         self.create_model(file['architecture'])
         self.sequential.load_state_dict(file['state_dict'])
+        self.labels = file['labels']
 
     def forward(self, inputs: Tensor) -> Tensor:
         return self.sequential(inputs)
