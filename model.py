@@ -1,5 +1,4 @@
 import math
-from collections import namedtuple
 from typing import Union, Tuple
 
 import torch.nn as nn
@@ -74,45 +73,40 @@ class Convolution(BaseLayer):
         return out
 
 
-class AFModel(nn.Sequential):
+class AFModel(nn.Module):
     def __init__(self):
         super().__init__()
 
     @staticmethod
-    def get_def_arch(in_channels: int, out_channels: int) -> Tuple[namedtuple, ...]:
+    def get_def_arch(in_channels: int, out_channels: int) -> Tuple[list, ...]:
         """
         Return default architecture with users input and output channels
         :param in_channels: input channels in model
         :param out_channels: output channels from model. Classes count
-        :return: (Tuple[namedtuple,...]) model architecture
+        :return: (Tuple[list,...]) model architecture
         """
         if type(in_channels) is not int or in_channels < 1:
             raise ValueError('in_channels should be type int and >= 1')
         if type(out_channels) is not int or out_channels < 1:
             raise ValueError('out_channels should be type int and >= 1')
 
-        Conv = namedtuple('Conv', ('in_c', 'out_c', 'k_size', 'batchnorm',
-                                   'sq_exc', 'nonlinear', 'stride'))
-
-        Pool = namedtuple('AdAvPool', 'out_size')
-        Dropout = namedtuple('Dropout', 'p')
-        return (Conv(in_channels, 8, 3, True, False, 'RE', 2),  # 224
-                Conv(8, 16, 3, True, True, 'RE', 2),  # 112
-                Conv(16, 32, 3, True, True, 'HS', 2),  # 56
-                Conv(32, 32, 3, True, False, 'RE', 1),  # 28
-                Conv(32, 64, 3, True, False, 'RE', 2),  # 28
-                Conv(64, 128, 3, True, True, 'HS', 2),  # 14
-                Pool(1),  # 7
-                Conv(128, 256, 1, False, False, 'HS', 1),  # 1
-                Dropout(0.8),  # 1
-                Conv(256, out_channels, 1, False, False, None, 1),  # 1
+        return (['Conv', in_channels, 8, 3, True, False, 'RE', 2],  # 224
+                ['Conv',8, 16, 3, True, True, 'RE', 2],  # 112
+                ['Conv', 16, 32, 3, True, True, 'HS', 2],  # 56
+                ['Conv', 32, 32, 3, True, False, 'RE', 1],  # 28
+                ['Conv', 32, 64, 3, True, False, 'RE', 2],  # 28
+                ['Conv', 64, 128, 3, True, True, 'HS', 2],  # 14
+                ['AdAvPool', 1],  # 7
+                ['Conv', 128, 256, 1, False, False, 'HS', 1],  # 1
+                ['Dropout', 0.8],  # 1
+                ['Conv', 256, out_channels, 1, False, False, None, 1],  # 1
                 )
 
     def weight_initialization(self):
         """
         Initialization model weight
         """
-        for module in self.modules():
+        for module in self.sequential.modules():
             if isinstance(module, nn.Conv2d):
                 nn.init.kaiming_normal_(module.weight, mode='fan_out')
                 if module.bias is not None:
@@ -121,44 +115,48 @@ class AFModel(nn.Sequential):
                 nn.init.ones_(module.weight)
                 nn.init.zeros_(module.bias)
 
-    def create_model(self, architecture: Union[Tuple[namedtuple, ...], None] = None,
+    def create_model(self, architecture: Union[Tuple[tuple, ...], None] = None,
                      in_channels: Union[int, None] = None,
                      classes_count: Union[int, None] = None,
                      ):
         """
         Creates MobileNet_v3 with the specified parameters
         :param architecture: (Tuple or None)
-            consist of namedtuple:
-                Conv = namedtuple('Conv', ('in_c', 'out_c', 'k_size', 'batchnorm',
-                                       'sq_exc', 'nonlinear', 'stride'))
-                Pool = namedtuple('AdAvPool', 'out_size')
-                Dropout = namedtuple('Dropout', 'p')
+            consist of lists:
+                Convolution - ['Conv', 'in_c', 'out_c', 'k_size', 'batchnorm',
+                                       'sq_exc', 'nonlinear', 'stride']
+                Pooling - ['AdAvPool', 'out_size']
+                Dropout - ['Dropout', 'p']
             if None used default architecture
         :param in_channels: (int or None) input channels in model. ignored if architecture not is None
         :param classes_count: (int or None) classes_count. ignored if architecture not is None
         """
+        self.sequential = nn.Sequential()
         if architecture is None:
             self.architecture = self.get_def_arch(in_channels, classes_count)
         else:
             self.architecture = architecture
 
         for ind, param in enumerate(self.architecture):
-            layer_name = type(param).__name__
+            layer_name = param[0]
             if layer_name == 'Conv':
-                self.add_module(f'{ind} {layer_name}', Convolution(*param))
+                self.sequential.add_module(f'{ind} {layer_name}', Convolution(*param[1:]))
             elif layer_name == 'AdAvPool':
-                self.add_module(layer_name, nn.AdaptiveAvgPool2d(*param))
+                self.sequential.add_module(f'{ind} {layer_name}', nn.AdaptiveAvgPool2d(*param[1:]))
             elif layer_name == 'Dropout':
-                self.add_module(layer_name, nn.Dropout(*param))
-        self.add_module('Flatten', nn.Flatten())
+                self.sequential.add_module(f'{ind} {layer_name}', nn.Dropout(*param[1:]))
+        self.sequential.add_module('Flatten', nn.Flatten())
         self.weight_initialization()
 
     def save_model(self, file_name: str = 'model.pkl'):
-        save({'state_dict': self.state_dict(),
-              'architecture': self.architecture
+        save({'architecture': self.architecture,
+              'state_dict': self.sequential.state_dict(),
               }, file_name)
 
     def load_model(self, file_name: str = 'model.pkl'):
         file = load(file_name)
         self.create_model(file['architecture'])
-        self.load_state_dict(file['state_dict'])
+        self.sequential.load_state_dict(file['state_dict'])
+
+    def forward(self, inputs: Tensor) -> Tensor:
+        return self.sequential(inputs)
