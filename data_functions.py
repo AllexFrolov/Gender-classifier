@@ -38,7 +38,7 @@ def train_test_split(data: Sequence, train_size: float,
 
 
 class MyDataLoader:
-    def __init__(self, data: Sequence,
+    def __init__(self, data,
                  batch_size: int,
                  indices: Optional[Sequence] = None,
                  shuffle: bool = False,
@@ -80,9 +80,9 @@ class MyDataLoader:
             X_batch.append(X)
             y_batch.append(y)
         if len(X_batch) > 1:
-            X_batch = torch.stack(X_batch)
+            X_batch = np.stack(X_batch)
         else:
-            X_batch = torch.unsqueeze(X_batch[0], 0)
+            X_batch = np.unsqueeze(X_batch[0], 0)
         return X_batch, y_batch
 
     def __iter__(self):
@@ -97,16 +97,17 @@ class MyDataLoader:
 
 
 class Dataset:
-    def __init__(self, data_folder, transform):
+    def __init__(self, data_folder: Path, transform=np.array):
         """
         Load .jpg files from data folder
-        :param data_folder: (str)
-        :param transform: (torchvision.transforms)
+        :param data_folder: (pathlib.Path)
+        :param transform: (transformer). Default: numpy.array
         """
-        self.classes = load_class_name('classes_name.pkl')
         data_dir = Path(data_folder)
         self.files = list(data_dir.rglob('*.jpg'))
         self.len_ = len(self.files)
+        if self.len_ == 0:
+            raise FileNotFoundError(f'No files in {data_dir}')
         self.file_names = [path.name for path in self.files]
         self.transform = transform
 
@@ -121,5 +122,5 @@ class Dataset:
     def __getitem__(self, index):
         x = self.load_sample(self.files[index])
         x = self.transform(x)
-        y = self.file_names[index]
-        return x, y
+        name = self.file_names[index]
+        return x, name
