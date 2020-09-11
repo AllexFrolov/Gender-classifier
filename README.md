@@ -1,19 +1,24 @@
 # Testing task for NtechLab
 ## [Solution of Task 1](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_1.py)
 ## Task 2
+### Training model
 For traning model use [Task2_draft.ipynp](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_2_draft.ipynb)<br>
 Download dataset [here](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q43qlkcXBdK/view)<br>
-By default, the model looks for files in the "Data / internship_data" folder<br>
+By default, the model looks for files in the "Data/internship_data" folder<br>
 For train in google colaboratory you can put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
 ### Data Preprocessing
 Image size 224x244<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
+### Testing model
 <br>
 For test model use [use_model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/use_model.py)<br>
-The result of use_model.py is the predictions.json file<br>
+For example: 
+```python
+python use_model.py Data/test  
+```
+Where __Data\test__ is a directory with test images<br>
+The result of use_model.py is the _predictions.json_ file<br>
 
-[data_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/data_functions.py) - functions to work with data
-[train_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/train_functions.py) - functions for train model
 ### Model
 | name | in_ch | out_ch | k_size | batchnorm | SE | non_linear | stride| input_size |
 |------|:-----:|:------:|:------:|:---------:|:--:|:-------:|:-----:|:----------:|
@@ -32,3 +37,6 @@ The result of use_model.py is the predictions.json file<br>
 Where SE - [Squeeze and Excited block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
 [model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/model.py) - model<br>
 model.pkl - pretreined model with default architecture and training parameters. Accuracy 0.95
+### Other
+[data_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/data_functions.py) - functions to work with data  
+[train_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/train_functions.py) - functions for train model  
