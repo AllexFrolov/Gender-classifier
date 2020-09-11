@@ -13,9 +13,11 @@ Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
 <br>
 For test model use [use_model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/use_model.py)<br>
 For example: 
+
 ```python
 python use_model.py Data/test  
 ```
+
 Where __Data\test__ is a directory with test images<br>
 The result of use_model.py is the _predictions.json_ file<br>
 
