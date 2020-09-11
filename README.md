@@ -11,8 +11,8 @@ For training in google colaboratory put the dataset archive "internship_data.tar
 Image size 224x244<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
 ### Testing model
-<br>
-For test model use [use_model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/use_model.py)<br>
+For test model run
+[use_model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/use_model.py)  
 For example: 
 
 ```python
