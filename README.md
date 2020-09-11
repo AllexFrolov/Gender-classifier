@@ -1,11 +1,12 @@
 # Testing task for NtechLab
 ## [Solution of Task 1](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_1.py)
 ## Task 2
+### [Requerements](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/requirements.txt)
 ### Training model
 For traning model use [Task2_draft.ipynp](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_2_draft.ipynb)<br>
 Download dataset [here](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q43qlkcXBdK/view)<br>
 By default, the model looks for files in the "Data/internship_data" folder<br>
-For train in google colaboratory you can put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
+For training in google colaboratory put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
 ### Data Preprocessing
 Image size 224x244<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
@@ -18,10 +19,14 @@ For example:
 python use_model.py Data/test  
 ```
 
-Where __Data\test__ is a directory with test images<br>
-The result of use_model.py is the _predictions.json_ file<br>
+Where __Data/test__ is a directory with test images<br>
+The result of use_model.py is the file _predictions.json_ with predictions in the form:<br>
+```python
+{"000001.jpg": "female", "000004.jpg": "male", "000009.jpg": "female", "000010.jpg": "female"}
+```
 
 ### Model
+Default model architecture:
 | name | in_ch | out_ch | k_size | batchnorm | SE | non_linear | stride| input_size |
 |------|:-----:|:------:|:------:|:---------:|:--:|:-------:|:-----:|:----------:|
 | Conv | image_ch | 8  | 3 | True | False | RE | 2 | 224 |
