@@ -71,7 +71,7 @@ class MyDataLoader:
     def __len__(self) -> int:
         return self.len_
 
-    def create_batch(self, indices: Sequence) -> Tuple[torch.Tensor, list]:
+    def create_batch(self, indices: Sequence) -> Tuple[np.array, list]:
         X_batch = []
         y_batch = []
         for batch_index in indices:
