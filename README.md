@@ -41,7 +41,7 @@ Default model architecture:
 | Conv | 256 | classes_count | 1 | False | False | None | 1 | 1 |
 |Flatten|
 
-Where SE - [Squeeze and Excited block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
+Where SE - [Squeeze and Excitation block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
 [model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/model.py) - model<br>
 model.pkl - pretreined model with default architecture and training parameters. Accuracy 0.95
 ### Other
