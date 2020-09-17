@@ -126,7 +126,7 @@ class AFModel(nn.Module):
                      classes_count: Union[int, None] = None,
                      ):
         """
-        Creates MobileNet_v3 with the specified parameters
+        Creates model with the specified parameters
         :param architecture: (Tuple or None)
             consist of lists:
                 Convolution - ['Conv', 'in_c', 'out_c', 'k_size', 'batchnorm',
