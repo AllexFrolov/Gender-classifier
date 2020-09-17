@@ -8,7 +8,7 @@ Download dataset [here](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q4
 By default, the model looks for files in the "Data/internship_data" folder<br>
 For training in google colaboratory put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
 ### Data Preprocessing
-Image size 224x244<br>
+Image size 224x224<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
 ### Testing model
 For test model run
