@@ -8,7 +8,7 @@ Download dataset [here](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q4
 By default, the model looks for files in the "Data/internship_data" folder<br>
 For training in google colaboratory put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
 ### Data Preprocessing
-Image size 224x244<br>
+Image size 224x224<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
 ### Testing model
 For test model run
@@ -41,7 +41,7 @@ Default model architecture:
 | Conv | 256 | classes_count | 1 | False | False | None | 1 | 1 |
 |Flatten|
 
-Where SE - [Squeeze and Excited block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
+Where SE - [Squeeze and Excitation block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
 [model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/model.py) - model<br>
 model.pkl - pretreined model with default architecture and training parameters. Accuracy 0.95
 ### Other
