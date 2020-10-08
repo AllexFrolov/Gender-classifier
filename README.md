@@ -1,18 +1,16 @@
-# Testing task for NtechLab
-## [Solution of Task 1](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_1.py)
-## Task 2
-### [Requerements](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/requirements.txt)
-### Training model
-For traning model use [Task2_draft.ipynp](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/Task_2_draft.ipynb)<br>
+# Gender classifier
+## [Requerements](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/requirements.txt)
+## Training model
+For traning model use [train_classifier.ipynp](https://github.com/AllexFrolov/Gender-classifier/blob/master/train_classifier.ipynb)<br>
 Download dataset [here](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q43qlkcXBdK/view)<br>
 By default, the model looks for files in the "Data/internship_data" folder<br>
-For training in google colaboratory put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/NtechLab/"<br>
-### Data Preprocessing
+For training in google colaboratory put the dataset archive "internship_data.tar.gz" in "My Drive/Colab/Gender_classifier/"<br>
+## Data preprocessing
 Image size 224x224<br>
 Normalization ([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])<br>
-### Testing model
+## Testing model
 For test model run
-[use_model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/use_model.py)  
+[use_model.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/use_model.py)  
 For example: 
 
 ```python
@@ -25,7 +23,7 @@ The result of use_model.py is the file _predictions.json_ with predictions in th
 {"000001.jpg": "female", "000004.jpg": "male", "000009.jpg": "female", "000010.jpg": "female"}
 ```
 
-### Model
+## Model
 Default model architecture:
 | name | in_ch | out_ch | k_size | batchnorm | SE | non_linear | stride| input_size |
 |------|:-----:|:------:|:------:|:---------:|:--:|:-------:|:-----:|:----------:|
@@ -42,8 +40,8 @@ Default model architecture:
 |Flatten|
 
 Where SE - [Squeeze and Excitation block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
-[model.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/model.py) - model<br>
-model.pkl - pretreined model with default architecture and training parameters. Accuracy 0.95
-### Other
-[data_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/data_functions.py) - functions to work with data  
-[train_functions.py](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/train_functions.py) - functions for train model  
+[model.py](https://github.com/AllexFrolov/Gender-classifierk/blob/master/model.py) - model<br>
+model.pkl - pretrained model with default architecture and training parameters. Accuracy 0.95
+## Other
+[data_functions.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/data_functions.py) - functions to work with data  
+[train_functions.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/train_functions.py) - functions for train model  
