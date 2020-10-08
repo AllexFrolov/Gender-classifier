@@ -163,7 +163,7 @@ class AFModel(nn.Module):
         self.sequential.add_module('Flatten', nn.Flatten())
         self.weight_initialization()
 
-    def save_model(self, file_name: str = 'model.pkl'):
+    def save_model(self, file_name: str = 'pretrained_weights/model.pkl'):
         """
         save weights values and architecture in a binary file
         :param file_name: full name of a file. Default: "model.pkl"
@@ -173,7 +173,7 @@ class AFModel(nn.Module):
               'labels': self.labels
               }, file_name)
 
-    def load_model(self, file_name: str = 'model.pkl'):
+    def load_model(self, file_name: str = 'pretrained_weights/model.pkl'):
         file = load(file_name)
         self.create_model(file['architecture'])
         self.sequential.load_state_dict(file['state_dict'])

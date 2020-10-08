@@ -40,8 +40,8 @@ Default model architecture:
 |Flatten|
 
 Where SE - [Squeeze and Excitation block](https://arxiv.org/abs/1709.01507). RE - ReLU, HS - [HardSwish](https://arxiv.org/abs/1905.02244)<br>
-[model.py](https://github.com/AllexFrolov/Gender-classifierk/blob/master/model.py) - model<br>
-model.pkl - pretrained model with default architecture and training parameters. Accuracy 0.95
+[model.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/model.py) - model<br>
+pretrained_weights/model.pkl - pretrained model with default architecture and training parameters. Accuracy 0.95
 ## Other
 [data_functions.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/data_functions.py) - functions to work with data  
 [train_functions.py](https://github.com/AllexFrolov/Gender-classifier/blob/master/train_functions.py) - functions for train model  
