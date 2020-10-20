@@ -1,6 +1,9 @@
 # Gender classifier
 ## Description
-This is an example of a pipeline for training and running a model. A [dataset](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q43qlkcXBdK/view) with people's faces is used as data. The task is to determine the gender by the face.
+This is an example of a pipeline for training and running a model. A [dataset](https://drive.google.com/file/d/1-HUNDjcmSqdtMCvEkVlI0q43qlkcXBdK/view) with people's faces is used as data. The task is to determine the gender by the face.<br>
+* A convolutional neural network class was created with the ability to save and load weights. 
+* To better train the model on the dataset, augmentation was applied. 
+* Also implemented classes for reading images from disk only for batch, functions for training the model
 ## [Requerements](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/requirements.txt)
 ## Training model
 For traning model use [train_classifier.ipynp](https://github.com/AllexFrolov/Gender-classifier/blob/master/train_classifier.ipynb)<br>
