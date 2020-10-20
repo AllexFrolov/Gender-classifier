@@ -4,6 +4,7 @@ This is an example of a pipeline for training and running a model. A [dataset](h
 * A convolutional neural network class was created with the ability to save and load weights. 
 * To better train the model on the dataset, augmentation was applied. And the scheduler is used (ReduceLROnPlateau)  
 * Also implemented classes for reading images from disk only for batch, functions for training the model
+__Stack:__ Numpy, Pillow, PyTorch, Albumentations, TQDM
 ## [Requerements](https://github.com/AllexFrolov/NtechLab-testing_task/blob/master/requirements.txt)
 ## Training model
 For traning model use [train_classifier.ipynp](https://github.com/AllexFrolov/Gender-classifier/blob/master/train_classifier.ipynb)<br>
